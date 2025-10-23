@@ -1,4 +1,16 @@
-# app.py (fixed)
+
+# Ensure Streamlit writes its config to a writable directory (like /tmp)
+import os
+
+# If HOME is unset or points to root ("/"), set it to /tmp which is writable in containers.
+home = os.environ.get("HOME", "")
+if home == "" or home == "/":
+    os.environ["HOME"] = "/tmp"
+
+# Also set XDG_CONFIG_HOME to a subfolder in /tmp so Streamlit uses that for ~/.streamlit-like data
+os.environ.setdefault("XDG_CONFIG_HOME", os.path.join(os.environ["HOME"], ".config"))
+
+# Now import Streamlit (after we've fixed HOME/XDG_CONFIG_HOME)
 import streamlit as st
 import requests
 from urllib.parse import quote_plus
